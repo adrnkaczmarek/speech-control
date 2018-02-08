@@ -1,6 +1,5 @@
 import logging
 from flask import Flask, request
-from gpio_controller import GPIOController
 import speech_recognition as sr
 import RPi.GPIO as GPIO
 
@@ -21,7 +20,6 @@ def init_logger():
 
 
 log = init_logger()
-pwmController = GPIOController()
 
 app = Flask(__name__)
 
@@ -31,7 +29,6 @@ freq = 1
 
 pwm = GPIO.PWM(12, freq)
 pwm.start(50.0)
-
 
 
 @app.route('/api/sound', methods=['POST'])
@@ -51,7 +48,6 @@ def change_frequency():
             audio = r.record(source)
         try:
             spoken_audio = r.recognize_google(audio)
-
 
             if spoken_audio == "turn off":
                 pwm.ChangeDutyCycle(0.0)
@@ -86,4 +82,4 @@ def test():
 
 if __name__ == '__main__':
     log.info("Flask started.")
-    app.run(host='0.0.0.0', port=5020)
+    app.run(host='0.0.0.0', port=5000)
